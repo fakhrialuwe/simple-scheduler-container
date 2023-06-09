@@ -16,4 +16,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . /app
 RUN chown -R www-data.www-data /app && composer install --optimize-autoloader
 
-ENTRYPOINT ["watch","-n","360","-t","sh start.sh"]
+ENTRYPOINT ["watch","-n","600","-t","sh start.sh"]

@@ -6,4 +6,4 @@
     touch /tmp/cmsrevalidate-$(date +%Y%m%d)
 # else
     # echo "We have run the script today. Skip."
-fi
+# fi
