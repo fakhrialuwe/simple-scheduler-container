@@ -1,9 +1,11 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
+FROM php:7.4-alpine
 
-RUN apk add --no-cache php7.4-pdo_odbc php7.4-sqlsrv php7.4-pdo_sqlsrv
+# Install required system dependencies
+RUN apk add --no-cache freetds-dev unixodbc-dev
 
-COPY odbc.ini /etc/odbc.ini
-COPY odbcinst.ini /etc/odbcinst.ini
+# Install the SQLSRV extension
+RUN pecl install sqlsrv pdo_sqlsrv && \
+    docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 WORKDIR /app
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
