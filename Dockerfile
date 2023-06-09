@@ -1,27 +1,15 @@
-FROM php:8.0
+FROM php:8.1-apache
+ENV ACCEPT_EULA=Y
 
-# Install required system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    unixodbc \
-    unixodbc-dev
-
-# Import the Microsoft GPG key
+# Install PDO dependencies
+RUN apt update && apt install -y gnupg2
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-
-# Register the Microsoft SQL Server repository
-RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
-
-# Update the package lists
-RUN apt-get update
-
-# Install the SQL Server drivers and ODBC driver
-RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools unixodbc-dev
-
-# Install the SQLSRV and PDO_SQLSRV extensions
-RUN pecl install sqlsrv pdo_sqlsrv && \
-    docker-php-ext-enable sqlsrv pdo_sqlsrv
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt update
+RUN ACCEPT_EULA=Y apt -y --no-install-recommends install msodbcsql17 unixodbc-dev
+RUN curl -o /usr/lib/x86_64-linux-gnu/libltdl.la https://www.apt-browse.org/browse/debian/jessie/main/amd64/libltdl-dev/2.4.2-1.11+b1/file/usr/lib/x86_64-linux-gnu/libltdl.la
+RUN pecl install sqlsrv pdo_sqlsrv
+RUN docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 WORKDIR /app
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
