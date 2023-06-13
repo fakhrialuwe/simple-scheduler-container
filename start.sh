@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ ! -f /tmp/cmsrevalidate-$(date +%Y%m%d) ]; then
-    php -f check_revalidate.php
+    php -f send_email.php
 # Draft claim email disabled by commenting below:
 #    npm run draft
     touch /tmp/cmsrevalidate-$(date +%Y%m%d)
